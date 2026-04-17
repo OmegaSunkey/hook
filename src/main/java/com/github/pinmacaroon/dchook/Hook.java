@@ -44,6 +44,8 @@ public class Hook implements DedicatedServerModInitializer {
             "^https:\\/\\/(ptb\\.|canary\\.)?discord\\.com\\/api\\/webhooks\\/\\d+\\/.+$"
     );
 
+    public static URI WEBHOOK_URI; 
+    
     public static volatile Bot BOT;
     public static boolean BOT_ENABLED = false;
 
@@ -75,18 +77,17 @@ public class Hook implements DedicatedServerModInitializer {
         if(ModConfigs.FUNCTIONS_BOT_ENABLED) bottedStart();
         else botlessStart();
         
-        if(ModConfigs.IS_THREAD) IS_THREAD = true;
-
-        try {
-            URI webhook_url;
-            if(ModConfigs.IS_THREAD) {
-                webhook_url = URI.create(ModConfigs.WEBHOOK_URL + "?thread_id=" + ModConfigs.THREAD_ID);
-            } else {
-                webhook_url = URI.create(ModConfigs.WEBHOOK_URL);
-            }
+        if(ModConfigs.IS_THREAD) {
+            IS_THREAD = true;
+            WEBHOOK_URI = URI.create(ModConfigs.WEBHOOK_URL + "?thread_id=" + ModConfigs.THREAD_ID);
+        } else {
+            WEBHOOK_URI = URI.create(ModConfigs.WEBHOOK_URL);
+        }
+        
+        try {    
             HttpRequest get_webhook = HttpRequest.newBuilder()
                     .GET()
-                    .uri(webhook_url)
+                    .uri(WEBHOOK_URI)
                     .build();
 
             HttpResponse<String> response = HTTPCLIENT.send(get_webhook, HttpResponse.BodyHandlers.ofString());

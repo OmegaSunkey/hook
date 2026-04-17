@@ -12,6 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class EventListeners {
@@ -28,7 +29,7 @@ public class EventListeners {
 
             HttpRequest post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
-                    .uri(URI.create(ModConfigs.WEBHOOK_URL))
+                    .uri(Hook.WEBHOOK_URI)
                     .header("Content-Type", "application/json")
                     .build();
 
@@ -48,7 +49,7 @@ public class EventListeners {
 
                     HttpRequest post = HttpRequest.newBuilder()
                             .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
-                            .uri(URI.create(ModConfigs.WEBHOOK_URL))
+                            .uri(Hook.WEBHOOK_URI)
                             .header("Content-Type", "application/json")
                             .build();
 
@@ -60,7 +61,7 @@ public class EventListeners {
                 }
 
                 if (ModConfigs.FUNCTIONS_PROMOTIONS_ENABLED) {
-                    PromotionProvider.sendPromotion(URI.create(ModConfigs.WEBHOOK_URL));
+                    PromotionProvider.sendPromotion(Hook.WEBHOOK_URI);
                 }
             });
 
@@ -72,7 +73,7 @@ public class EventListeners {
 
                 HttpRequest post = HttpRequest.newBuilder()
                         .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
-                        .uri(URI.create(ModConfigs.WEBHOOK_URL))
+                        .uri(Hook.WEBHOOK_URI)
                         .header("Content-Type", "application/json")
                         .build();
 
@@ -94,7 +95,7 @@ public class EventListeners {
 
             HttpRequest post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
-                    .uri(URI.create(ModConfigs.WEBHOOK_URL))
+                    .uri(Hook.WEBHOOK_URI)
                     .header("Content-Type", "application/json")
                     .build();
 
@@ -126,7 +127,7 @@ public class EventListeners {
 
             HttpRequest post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
-                    .uri(URI.create(ModConfigs.WEBHOOK_URL))
+                    .uri(Hook.WEBHOOK_URI)
                     .header("Content-Type", "application/json")
                     .build();
 
@@ -146,7 +147,7 @@ public class EventListeners {
 
             HttpRequest post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
-                    .uri(URI.create(ModConfigs.WEBHOOK_URL))
+                    .uri(Hook.WEBHOOK_URI)
                     .header("Content-Type", "application/json")
                     .build();
 
