@@ -54,11 +54,11 @@ public class ModConfigs {
 
         configs.addDocumentationLine("Configure Discord connection related parameters:");
         configs.addKeyValuePair(new Pair<>("webhook.url", "https://discord.com/api/webhooks/000/ABCDEF"), "url of webhook");
-	configs.addDocumentationLine("Configure if webhook points to a thread");
-	configs.addKeyValuePair(new Pair<>("webhook.thread", false), "is channel a thread?");
-	configs.addDocumentationLine("Configure Thread ID if true. DON'T ADD ?thread_id PARAMETER TO THE WEBHOOK AS THE MOD AUTOMATICALLY INSERTS IT!");
-	configs.addKeyValuePair(new Pair<>("webhook.thread.id", "01234567890123456789"), "id of thread");
-	configs.addBlankLine();
+        configs.addDocumentationLine("Configure if webhook points to a thread");
+        configs.addKeyValuePair(new Pair<>("webhook.thread", false), "is channel a thread?");
+        configs.addDocumentationLine("Configure Thread ID if true. DON'T ADD ?thread_id PARAMETER TO THE WEBHOOK AS THE MOD AUTOMATICALLY INSERTS IT!");
+        configs.addKeyValuePair(new Pair<>("webhook.thread.id", "01234567890123456789"), "id of thread");
+        configs.addBlankLine();
 
         configs.addDocumentationLine("Configure messages sent:");
         configs.addKeyValuePair(new Pair<>("messages.server.starting", "The server is starting!"), "start message");
@@ -84,8 +84,8 @@ public class ModConfigs {
 
     private static void assignConfigs() {
         WEBHOOK_URL = CONFIG.getOrDefault("webhook.url", "");
-	IS_THREAD = CONFIG.getOrDefault("webhook.thread", false);
-	THREAD_ID = CONFIG.getOrDefault("webhook.thread.id", "");
+        IS_THREAD = CONFIG.getOrDefault("webhook.thread", false);
+        THREAD_ID = CONFIG.getOrDefault("webhook.thread.id", "");
         MESSAGES_SERVER_STARTING = CONFIG.getOrDefault("messages.server.starting", "messages.server.starting");
         MESSAGES_SERVER_STARTED = CONFIG.getOrDefault("messages.server.started", "messages.server.started");
         MESSAGES_SERVER_STOPPED = CONFIG.getOrDefault("messages.server.stopped", "messages.server.stopped");
