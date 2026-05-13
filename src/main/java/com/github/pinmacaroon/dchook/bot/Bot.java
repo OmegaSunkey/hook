@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.interactions.IntegrationType;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -79,7 +80,12 @@ public class Bot {
                                 ).setRequired(false)
                         )
                         .setContexts(InteractionContextType.GUILD)
+                        .setIntegrationTypes(IntegrationType.GUILD_INSTALL),
+                Commands.slash("allowplayer","Sets survival mode to a player")
+                        .addOptions(new OptionData(OptionType.STRING ,"username", "The player to put on survival mode for").setRequired(true))
+                        .setContexts(InteractionContextType.GUILD)
                         .setIntegrationTypes(IntegrationType.GUILD_INSTALL)
+                        .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
         );
 
         commands.queue();

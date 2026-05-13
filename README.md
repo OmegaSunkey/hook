@@ -1,3 +1,11 @@
+# Personal fork with more server management features (and hardcoded stuff)
+
+- allowplayer command (to switch from adventure to survival)
+- offline fixes (shows skin if username exists on online mc)
+- hardcoded admin log for ooc messages
+- disallow @everyone @here @user @role mentions
+
+
 # dchook
 
 Send Minecraft chat messages to Discord server channels with ease! dchook is a

@@ -24,6 +24,7 @@ public class SlashCommandInteractionListener extends ListenerAdapter {
             case "time" -> TimeCommand.run(event);
             case "mods" -> ModsCommand.run(event);
             case "list" -> ListCommand.run(event);
+            case "allowplayer" -> AllowCommand.run(event);
             case "stat" -> StatCommand.run(event);
             case "about" -> AboutCommand.run(event);
             default -> event.reply("""

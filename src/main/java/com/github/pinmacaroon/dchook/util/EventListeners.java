@@ -26,6 +26,7 @@ public class EventListeners {
             HashMap<String, String> request_body = new HashMap<>();
             request_body.put("content", "**"+ModConfigs.MESSAGES_SERVER_STARTING+"**");
             request_body.put("username", "server");
+            request_body.put("avatar_url", "https://cdn.discordapp.com/attachments/1503920155925942412/1503925778138533908/image.png?ex=6a051f87&is=6a03ce07&hm=277eb16e8ed6083fa3e87c9791b28b67b3f8a85edc76158b1b6d34313720c685");
 
             HttpRequest post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
@@ -40,12 +41,13 @@ public class EventListeners {
             }
         });
 
-        if (ModConfigs.MESSAGES_SERVER_STARTED_ALLOWED && ModConfigs.FUNCTIONS_PROMOTIONS_ENABLED)
+        if (ModConfigs.MESSAGES_SERVER_STARTED_ALLOWED)
             ServerLifecycleEvents.SERVER_STARTED.register(server -> {
                 if (ModConfigs.MESSAGES_SERVER_STARTED_ALLOWED) {
                     HashMap<String, String> request_body = new HashMap<>();
                     request_body.put("content", "**"+ModConfigs.MESSAGES_SERVER_STARTED+"**");
                     request_body.put("username", "server");
+                    request_body.put("avatar_url", "https://cdn.discordapp.com/attachments/1503920155925942412/1503925778138533908/image.png?ex=6a051f87&is=6a03ce07&hm=277eb16e8ed6083fa3e87c9791b28b67b3f8a85edc76158b1b6d34313720c685");
 
                     HttpRequest post = HttpRequest.newBuilder()
                             .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
@@ -70,6 +72,7 @@ public class EventListeners {
                 HashMap<String, String> request_body = new HashMap<>();
                 request_body.put("content", "**" + ModConfigs.MESSAGES_SERVER_STOPPED + "**");
                 request_body.put("username", "server");
+                request_body.put("avatar_url", "https://cdn.discordapp.com/attachments/1503920155925942412/1503925778138533908/image.png?ex=6a051f87&is=6a03ce07&hm=277eb16e8ed6083fa3e87c9791b28b67b3f8a85edc76158b1b6d34313720c685");
 
                 HttpRequest post = HttpRequest.newBuilder()
                         .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
@@ -92,6 +95,7 @@ public class EventListeners {
             HashMap<String, String> request_body = new HashMap<>();
             request_body.put("content", "**"+ModConfigs.MESSAGES_SERVER_STOPPING+"**");
             request_body.put("username", "server");
+            request_body.put("avatar_url", "https://cdn.discordapp.com/attachments/1503920155925942412/1503925778138533908/image.png?ex=6a051f87&is=6a03ce07&hm=277eb16e8ed6083fa3e87c9791b28b67b3f8a85edc76158b1b6d34313720c685");
 
             HttpRequest post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
@@ -107,9 +111,7 @@ public class EventListeners {
         });
 
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, parameters) -> {
-            if(message.getSignedContent().strip().endsWith("//") && ModConfigs.FUNCTIONS_ALLOWOOCMESSAGES) return;
-
-            HashMap<String, String> request_body = new HashMap<>();
+            HashMap<String, Object> request_body = new HashMap<>();
 
             if(XaeoWaypoint.parse(message.getSignedContent())!=null){
                 XaeoWaypoint point = XaeoWaypoint.parse(message.getSignedContent());
@@ -123,16 +125,37 @@ public class EventListeners {
             } else request_body.put("content", MarkdownSanitizer.escape(message.getSignedContent()));
 
             request_body.put("username", sender.getName().getString());
-            request_body.put("avatar_url", "https://crafthead.net/helm/" + message.getSender().toString());
+            request_body.put("avatar_url", "https://crafthead.net/helm/" + sender.getName().getString());
+            
+            HashMap<String, Object> allowedMentions = new HashMap<>();
+	        allowedMentions.put("parse", new ArrayList<>());
+	        request_body.put("allowed_mentions", allowedMentions);
+            
+            HttpRequest post;
+            HttpRequest repost = null;
+            //admin stuff
+            if(message.getSignedContent().strip().endsWith("//") && ModConfigs.FUNCTIONS_ALLOWOOCMESSAGES) {
+                post = HttpRequest.newBuilder()
+                    .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
+                    .uri(URI.create("https://discord.com/api/webhooks/1503962520132653140/KuJbVhv3ntcxWJvjCigLQpyTneWeh06wR6jZ6ss1NyvBXeXaRL2mrbScrcS-CL5zOTb8"))
+                    .header("Content-Type", "application/json")
+                    .build();
 
-            HttpRequest post = HttpRequest.newBuilder()
+            } else {
+                post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
                     .uri(Hook.WEBHOOK_URI)
                     .header("Content-Type", "application/json")
                     .build();
-
+                repost = HttpRequest.newBuilder()
+                    .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
+                    .uri(URI.create("https://discord.com/api/webhooks/1503962520132653140/KuJbVhv3ntcxWJvjCigLQpyTneWeh06wR6jZ6ss1NyvBXeXaRL2mrbScrcS-CL5zOTb8"))
+                    .header("Content-Type", "application/json")
+                    .build();
+            }
             try {
                 Hook.HTTPCLIENT.sendAsync(post, HttpResponse.BodyHandlers.ofString()).get().body();
+                if(repost != null) Hook.HTTPCLIENT.sendAsync(repost, HttpResponse.BodyHandlers.ofString()).get().body();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
@@ -144,6 +167,7 @@ public class EventListeners {
             HashMap<String, String> request_body = new HashMap<>();
             request_body.put("content", "**"+Text.translatable(text.getString()).getString()+"**");
             request_body.put("username", "game");
+            request_body.put("avatar_url", "https://cdn.discordapp.com/attachments/1503920155925942412/1503925778138533908/image.png?ex=6a051f87&is=6a03ce07&hm=277eb16e8ed6083fa3e87c9791b28b67b3f8a85edc76158b1b6d34313720c685&animated=true");
 
             HttpRequest post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
