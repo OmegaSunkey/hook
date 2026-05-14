@@ -4,7 +4,7 @@
 - offline fixes (shows skin if username exists on online mc)
 - hardcoded admin log for ooc messages
 - disallow @everyone @here @user @role mentions
-
+- port to 26.1.2
 
 # dchook
 
