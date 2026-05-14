@@ -137,7 +137,7 @@ public class EventListeners {
             if(message.signedContent().strip().endsWith("//") && ModConfigs.FUNCTIONS_ALLOWOOCMESSAGES) {
                 post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
-                    .uri(URI.create("https://discord.com/api/webhooks/1503962520132653140/KuJbVhv3ntcxWJvjCigLQpyTneWeh06wR6jZ6ss1NyvBXeXaRL2mrbScrcS-CL5zOTb8"))
+                    .uri(URI.create(ModConfigs.FUNCTIONS_MOD_BACKLOG))
                     .header("Content-Type", "application/json")
                     .build();
 
@@ -149,7 +149,7 @@ public class EventListeners {
                     .build();
                 repost = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
-                    .uri(URI.create("https://discord.com/api/webhooks/1503962520132653140/KuJbVhv3ntcxWJvjCigLQpyTneWeh06wR6jZ6ss1NyvBXeXaRL2mrbScrcS-CL5zOTb8"))
+                    .uri(URI.create(ModConfigs.FUNCTIONS_MOD_BACKLOG))
                     .header("Content-Type", "application/json")
                     .build();
             }

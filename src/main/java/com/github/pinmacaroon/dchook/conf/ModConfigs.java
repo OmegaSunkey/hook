@@ -19,6 +19,7 @@ public class ModConfigs {
     public static String MESSAGES_BOT_MODS_NONE;
     public static boolean IS_THREAD;
     public static boolean FUNCTIONS_ALLOWOOCMESSAGES;
+    public static String FUNCTIONS_MOD_BACKLOG;
     public static boolean MESSAGES_SERVER_STARTING_ALLOWED;
     public static boolean MESSAGES_SERVER_STOPPED_ALLOWED;
     public static boolean MESSAGES_SERVER_STARTED_ALLOWED;
@@ -46,6 +47,7 @@ public class ModConfigs {
         configs.addDocumentationLine("Configure functionality of the mod:");
         configs.addKeyValuePair(new Pair<>("functions.mod_enabled", true), "enables/disables the mod's functionality");
         configs.addKeyValuePair(new Pair<>("functions.allow_ooc_messages", true), "allow players to be ignored from proxying if their message ends with double slashes?");
+        configs.addKeyValuePair(new Pair<>("functions.mod_backlog_channel_or_thread", ""), "channel to register these messages if ooc is enabled");
         configs.addKeyValuePair(new Pair<>("functions.promotions.enabled", true), "are tips and hints/promotion embeds allowed to be sent to Discord");
         configs.addKeyValuePair(new Pair<>("functions.bot.enabled", true), "is two-way chat (the bot) enabled?");
         configs.addKeyValuePair(new Pair<>("functions.bot.token", "TOKEN"), "bot token");
@@ -95,6 +97,7 @@ public class ModConfigs {
         MESSAGES_BOT_MODS_LIST = CONFIG.getOrDefault("messages.bot.mods.list", "messages.bot.mods.list");
         MESSAGES_BOT_MODS_NONE = CONFIG.getOrDefault("messages.bot.mods.none", "messages.bot.mods.none");
         FUNCTIONS_ALLOWOOCMESSAGES = CONFIG.getOrDefault("functions.allow_ooc_messages", false);
+        FUNCTIONS_MOD_BACKLOG = CONFIG.getOrDefault("functions.mod_backlog_channel_or_thread", "");
 
         MESSAGES_SERVER_STARTING_ALLOWED = CONFIG.getOrDefault("messages.server.starting.allowed", false);
         MESSAGES_SERVER_STARTED_ALLOWED = CONFIG.getOrDefault("messages.server.started.allowed", false);
