@@ -7,9 +7,10 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReference;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import org.jetbrains.annotations.NotNull;
 
 public class MessageReceivedListener extends ListenerAdapter {
@@ -25,33 +26,40 @@ public class MessageReceivedListener extends ListenerAdapter {
         if (event.getMessage().getAuthor().isBot()) return;
         if (event.getChannel().getIdLong() == this.BOT.getCHANNEL_ID() && Hook.getGameServer() != null) {
             if (event.getMessage().getContentStripped().endsWith("//") && ModConfigs.FUNCTIONS_ALLOWOOCMESSAGES) return;
-            Hook.getGameServer().getPlayerManager().broadcast(renderMessage(event.getMessage()), false);
+            Hook.getGameServer().getPlayerList().broadcastSystemMessage(renderMessage(event.getMessage()), false);
         }
     }
 
-    private static MutableText renderMessage(Message message) {
+    private static Component renderMessage(Message message) {
         final String raw_message = message.getContentDisplay();
-        MutableText signature;
+        /*MutableText signature;
         MutableText reply;
-        MutableText content;
+        MutableText content;*/
+        String reply;
+        String signature;
+        String content;
+        MutableComponent msg;
 
         MessageReference r = message.getMessageReference();
         if (r != null) {
-            reply = Text.literal("<@%s -> ".formatted(
+            reply = "<@%s -> ".formatted(
                     r.getMessage().getAuthor().getName()
-            ));
+            );
         } else {
-            reply = Text.literal("<");
+            reply = "<";
         }
 
-        signature = Text.literal("@%s> ".formatted(
+        signature = "@%s> ".formatted(
                 message.getAuthor().getName()
-        ));
+        );
 
         content = (raw_message.isBlank())
-                ? Text.literal("[embed]")
-                : Text.literal(raw_message);
+                ? "[embed]"
+                : raw_message;
 
-        return reply.append(signature).append(content).formatted(Formatting.BLUE);
+        //msg = reply + signature + content;
+        msg = MutableComponent.create(PlainTextContents.create(reply + signature + content));
+
+        return msg.withStyle(ChatFormatting.BLUE);
     }
 }

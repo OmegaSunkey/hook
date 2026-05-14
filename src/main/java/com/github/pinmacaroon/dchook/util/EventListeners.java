@@ -5,7 +5,7 @@ import com.github.pinmacaroon.dchook.conf.ModConfigs;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -113,8 +113,8 @@ public class EventListeners {
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, parameters) -> {
             HashMap<String, Object> request_body = new HashMap<>();
 
-            if(XaeoWaypoint.parse(message.getSignedContent())!=null){
-                XaeoWaypoint point = XaeoWaypoint.parse(message.getSignedContent());
+            if(XaeoWaypoint.parse(message.signedContent())!=null){
+                XaeoWaypoint point = XaeoWaypoint.parse(message.signedContent());
                 request_body.put("content", MessageFormat.format(
                         "*"+ModConfigs.MESSAGES_SERVER_WAYPOINT+"*",
                         point.name,
@@ -122,7 +122,7 @@ public class EventListeners {
                         point.x, point.y, point.z,
                         point.getDimension()
                 ));
-            } else request_body.put("content", MarkdownSanitizer.escape(message.getSignedContent()));
+            } else request_body.put("content", MarkdownSanitizer.escape(message.signedContent()));
 
             request_body.put("username", sender.getName().getString());
             request_body.put("avatar_url", "https://crafthead.net/helm/" + sender.getName().getString());
@@ -134,7 +134,7 @@ public class EventListeners {
             HttpRequest post;
             HttpRequest repost = null;
             //admin stuff
-            if(message.getSignedContent().strip().endsWith("//") && ModConfigs.FUNCTIONS_ALLOWOOCMESSAGES) {
+            if(message.signedContent().strip().endsWith("//") && ModConfigs.FUNCTIONS_ALLOWOOCMESSAGES) {
                 post = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofString(Hook.GSON.toJson(request_body)))
                     .uri(URI.create("https://discord.com/api/webhooks/1503962520132653140/KuJbVhv3ntcxWJvjCigLQpyTneWeh06wR6jZ6ss1NyvBXeXaRL2mrbScrcS-CL5zOTb8"))
@@ -162,10 +162,10 @@ public class EventListeners {
         });
 
         ServerMessageEvents.GAME_MESSAGE.register((server, text, b) -> {
-            if(Text.translatable(text.getString()).getString().startsWith("<")) return;
+            if(Component.translatable(text.getString()).getString().startsWith("<")) return;
 
             HashMap<String, String> request_body = new HashMap<>();
-            request_body.put("content", "**"+Text.translatable(text.getString()).getString()+"**");
+            request_body.put("content", "**"+Component.translatable(text.getString()).getString()+"**");
             request_body.put("username", "game");
             request_body.put("avatar_url", "https://cdn.discordapp.com/attachments/1503920155925942412/1503925778138533908/image.png?ex=6a051f87&is=6a03ce07&hm=277eb16e8ed6083fa3e87c9791b28b67b3f8a85edc76158b1b6d34313720c685&animated=true");
 
