@@ -42,8 +42,7 @@ public class MessageReceivedListener extends ListenerAdapter {
         MutableComponent msg;
         MutableComponent user;
 
-        List<Role> roles = Objects.requireNonNull(message.getMember()).getRoles();
-        int user_color = !roles.isEmpty() && roles.getFirst().getColorRaw() != 0x1FFFFFFF ? roles.getFirst().getColorRaw() : 16748981;
+        int user_color = Objects.requireNonNull(message.getMember()).getColorRaw() != 0x1FFFFFFF ? message.getMember().getColorRaw() : 16748981;
 
         MessageReference r = message.getMessageReference();
         if (r != null) {
