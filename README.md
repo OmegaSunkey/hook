@@ -1,10 +1,11 @@
 # Personal fork with more server management features (and hardcoded stuff)
 
 - allowplayer command (to switch from adventure to survival)
-- offline fixes (shows skin if username exists on online mc)
-- hardcoded admin log for ooc messages
+- offline fixes (shows skin on dc chat if username exists on online mc)
+- admin log for ooc messages
 - disallow @everyone @here @user @role mentions
 - port to 26.1.2
+- Role colors in chat
 
 # dchook
 

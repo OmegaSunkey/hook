@@ -5,6 +5,7 @@ import com.github.pinmacaroon.dchook.bot.Bot;
 import com.github.pinmacaroon.dchook.conf.ModConfigs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReference;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.minecraft.ChatFormatting;
@@ -12,6 +13,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Objects;
 
 public class MessageReceivedListener extends ListenerAdapter {
     private final Bot BOT;
@@ -32,13 +36,14 @@ public class MessageReceivedListener extends ListenerAdapter {
 
     private static Component renderMessage(Message message) {
         final String raw_message = message.getContentDisplay();
-        /*MutableText signature;
-        MutableText reply;
-        MutableText content;*/
         String reply;
         String signature;
         String content;
         MutableComponent msg;
+        MutableComponent user;
+
+        List<Role> roles = Objects.requireNonNull(message.getMember()).getRoles();
+        int user_color = !roles.isEmpty() && roles.getFirst().getColorRaw() != 0x1FFFFFFF ? roles.getFirst().getColorRaw() : 16748981;
 
         MessageReference r = message.getMessageReference();
         if (r != null) {
@@ -57,9 +62,9 @@ public class MessageReceivedListener extends ListenerAdapter {
                 ? "[embed]"
                 : raw_message;
 
-        //msg = reply + signature + content;
-        msg = MutableComponent.create(PlainTextContents.create(reply + signature + content));
+        user = MutableComponent.create(PlainTextContents.create(reply + signature)).withColor(user_color);
+        msg = MutableComponent.create(PlainTextContents.create(content)).withStyle(ChatFormatting.WHITE);
 
-        return msg.withStyle(ChatFormatting.BLUE);
+        return user.append(msg);
     }
 }
