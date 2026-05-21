@@ -5,7 +5,6 @@ import com.github.pinmacaroon.dchook.bot.Bot;
 import com.github.pinmacaroon.dchook.conf.ModConfigs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReference;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.minecraft.ChatFormatting;
@@ -14,7 +13,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Objects;
 
 public class MessageReceivedListener extends ListenerAdapter {
@@ -36,34 +34,46 @@ public class MessageReceivedListener extends ListenerAdapter {
 
     private static Component renderMessage(Message message) {
         final String raw_message = message.getContentDisplay();
-        String reply;
-        String signature;
-        String content;
-        MutableComponent msg;
-        MutableComponent user;
+        MutableComponent reply;
+        MutableComponent signature;
+        MutableComponent content;
 
-        int user_color = Objects.requireNonNull(message.getMember()).getColorRaw() != 0x1FFFFFFF ? message.getMember().getColorRaw() : 16748981;
+        int user_color = Objects.requireNonNull(message.getMember()).getColorRaw() != 0x1FFFFFFF
+                ? message.getMember().getColorRaw()
+                : 16748981;
 
         MessageReference r = message.getMessageReference();
         if (r != null) {
-            reply = "<@%s -> ".formatted(
-                    r.getMessage().getAuthor().getName()
-            );
+            reply = createMessage("<").withStyle(ChatFormatting.WHITE)
+                    .append(
+                            createMessage(
+                                    "@%s".formatted(
+                                            r.getMessage().getAuthor().getName()
+                                    )
+                            ).withColor(16748981)
+                    ).append(
+                            createMessage(" -> ").withColor(user_color)
+                    );
         } else {
-            reply = "<";
+            reply = createMessage("<").withStyle(ChatFormatting.WHITE);
         }
 
-        signature = "@%s> ".formatted(
-                message.getAuthor().getName()
-        );
+        signature = createMessage(
+                "@%s".formatted(
+                        message.getAuthor().getName()
+                )).withColor(user_color)
+                .append(createMessage("> ").withStyle(ChatFormatting.WHITE));
 
-        content = (raw_message.isBlank())
-                ? "[embed]"
-                : raw_message;
+        if (!message.getAttachments().isEmpty()) {
+            content = raw_message.isBlank()
+                    ? createMessage("[embed]").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY)
+                    : createMessage(raw_message).append(createMessage(" [embed]").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
+        } else content = createMessage(raw_message);
 
-        user = MutableComponent.create(PlainTextContents.create(reply + signature)).withColor(user_color);
-        msg = MutableComponent.create(PlainTextContents.create(content)).withStyle(ChatFormatting.WHITE);
+        return reply.append(signature.append(content));
+    }
 
-        return user.append(msg);
+    private static MutableComponent createMessage(String message) {
+        return MutableComponent.create(PlainTextContents.create(message));
     }
 }

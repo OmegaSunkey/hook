@@ -2,6 +2,7 @@ package com.github.pinmacaroon.dchook.util;
 
 import com.github.pinmacaroon.dchook.Hook;
 import com.github.pinmacaroon.dchook.conf.ModConfigs;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
@@ -13,7 +14,12 @@ import java.net.http.HttpResponse;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.github.pinmacaroon.dchook.Hook.LOGGER;
 
 public class EventListeners {
 
@@ -122,6 +128,16 @@ public class EventListeners {
                         point.x, point.y, point.z,
                         point.getDimension()
                 ));
+            } else if(ModConfigs.FUNCTIONS_BOT_ENABLED && Pattern.compile(":[^:+]:").matcher(message.signedContent()).lookingAt()) {
+                String emojified_message = Pattern.compile(":([^:]+):")
+                        .matcher(message.signedContent())
+                        .replaceAll(emoji_match -> {
+                            LOGGER.info("Matched: %s".formatted(emoji_match.group(1)));
+                            List<RichCustomEmoji> match = Hook.BOT.getJDA().getGuildById(Hook.BOT.getGUILD_ID()).getEmojisByName(emoji_match.group(1), false);
+                            if(!match.isEmpty()) return match.getFirst().getAsMention(); else return message.signedContent();
+                        });
+                LOGGER.info("Emojified: %s".formatted(emojified_message));
+                request_body.put("content", emojified_message);
             } else request_body.put("content", MarkdownSanitizer.escape(message.signedContent()));
 
             request_body.put("username", sender.getName().getString());

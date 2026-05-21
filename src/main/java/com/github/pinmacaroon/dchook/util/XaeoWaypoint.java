@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class XaeoWaypoint {
     private static final Pattern WAYPOINT_PATTERN = Pattern.compile(
             //               name1   marker2  x3       y4       z5       yaw6      ?        ?                  dimension7
-            "^xaero-waypoint:([^:]+):(.{1,2}):(-?\\d+):(-?\\d+):(-?\\d+):(-?\\d+):[^:]+:[^:]+:Internal-(the-nether|overworld|the-end)-waypoints$"
+            "^xaero-waypoint:([^:]+):(.{1,2}):(-?\\d+):(-?\\d+):(-?\\d+):(-?\\d+):[^:]+:[^:]+:Internal-(the-nether|overworld|the-end)$"
     );
 
     public static XaeoWaypoint parse(String text) {

@@ -33,8 +33,8 @@ public class Hook implements DedicatedServerModInitializer {
     public static final Version VERSION = new Version.Builder()
             .setMajorVersion(1)
             .setMinorVersion(1)
-            .setPatchVersion(0)
-            .setBuildMetadata("fabric","1","21","1")
+            .setPatchVersion(3)
+            .setBuildMetadata("fabric","26","1","2")
 //            .setPreReleaseVersion("newyear", "1")
             .build();
     public static final String DOCS_URL = "https://modrinth.com/mod/dchook";
