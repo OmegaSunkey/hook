@@ -128,16 +128,6 @@ public class EventListeners {
                         point.x, point.y, point.z,
                         point.getDimension()
                 ));
-            } else if(ModConfigs.FUNCTIONS_BOT_ENABLED && Pattern.compile(":[^:+]:").matcher(message.signedContent()).lookingAt()) {
-                String emojified_message = Pattern.compile(":([^:]+):")
-                        .matcher(message.signedContent())
-                        .replaceAll(emoji_match -> {
-                            LOGGER.info("Matched: %s".formatted(emoji_match.group(1)));
-                            List<RichCustomEmoji> match = Hook.BOT.getJDA().getGuildById(Hook.BOT.getGUILD_ID()).getEmojisByName(emoji_match.group(1), false);
-                            if(!match.isEmpty()) return match.getFirst().getAsMention(); else return message.signedContent();
-                        });
-                LOGGER.info("Emojified: %s".formatted(emojified_message));
-                request_body.put("content", emojified_message);
             } else request_body.put("content", MarkdownSanitizer.escape(message.signedContent()));
 
             request_body.put("username", sender.getName().getString());

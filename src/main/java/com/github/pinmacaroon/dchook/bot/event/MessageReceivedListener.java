@@ -3,6 +3,8 @@ package com.github.pinmacaroon.dchook.bot.event;
 import com.github.pinmacaroon.dchook.Hook;
 import com.github.pinmacaroon.dchook.bot.Bot;
 import com.github.pinmacaroon.dchook.conf.ModConfigs;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReference;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -43,14 +45,18 @@ public class MessageReceivedListener extends ListenerAdapter {
                 : 16748981;
 
         MessageReference r = message.getMessageReference();
+
         if (r != null) {
+            Message m = Objects.requireNonNull(r.getChannel()).retrieveMessageById(r.getMessageId()).complete();
+            Member rm = m.getMember();
+            int mcolor = rm != null && rm.getColorRaw() != 0x1FFFFFFF ? rm.getColorRaw() : 16748981;
             reply = createMessage("<").withStyle(ChatFormatting.WHITE)
                     .append(
                             createMessage(
                                     "@%s".formatted(
                                             r.getMessage().getAuthor().getName()
                                     )
-                            ).withColor(16748981)
+                            ).withColor(mcolor)
                     ).append(
                             createMessage(" -> ").withColor(user_color)
                     );
@@ -67,8 +73,8 @@ public class MessageReceivedListener extends ListenerAdapter {
         if (!message.getAttachments().isEmpty()) {
             content = raw_message.isBlank()
                     ? createMessage("[embed]").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY)
-                    : createMessage(raw_message).append(createMessage(" [embed]").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
-        } else content = createMessage(raw_message);
+                    : createMessage(raw_message).withStyle(ChatFormatting.WHITE).append(createMessage(" [embed]").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
+        } else content = createMessage(raw_message).withStyle(ChatFormatting.WHITE);
 
         return reply.append(signature.append(content));
     }
